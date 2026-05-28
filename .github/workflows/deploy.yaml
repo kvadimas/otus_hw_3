@@ -24,7 +24,7 @@ jobs:
           ssh-keyscan ${{ github.event.inputs.server }} >> ~/.ssh/known_hosts
       - name: Deploy to server
         run: |
-          scp ./ ${{ env.REMOTE_USER }}@${{ github.event.inputs.server }}:/opt/otus/
+          scp -r ./* ${{ env.REMOTE_USER }}@${{ github.event.inputs.server }}:/opt/otus/
           ssh -t ${{ env.REMOTE_USER }}@${{ github.event.inputs.server }} /bin/bash <<EOF
             docker compose -f /opt/otus/docker-compose.yaml down
             docker compose -f /opt/otus/docker-compose.yaml up -d
