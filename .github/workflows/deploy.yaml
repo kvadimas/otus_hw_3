@@ -1,0 +1,32 @@
+
+name: Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      server:
+        description: 'Куда льем?'
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    env:
+      REMOTE_USER: "kvadimas"
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ github.event.inputs.server }} >> ~/.ssh/known_hosts
+      - name: Deploy to server
+        run: |
+          scp ./ ${{ env.REMOTE_USER }}@${{ github.event.inputs.server }}:/opt/otus/
+          ssh -t ${{ env.REMOTE_USER }}@${{ github.event.inputs.server }} /bin/bash <<EOF
+            docker compose -f /opt/otus/docker-compose.yaml down
+            docker compose -f /opt/otus/docker-compose.yaml up -d
+          EOF
