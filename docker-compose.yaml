@@ -28,7 +28,7 @@ services:
       - wp_network
 
   wordpress:
-    image: wordpress:7.0.0-php8.2-apache
+    image: wordpress:7.0.0-php8.2-fpm
     container_name: wp_php
     restart: unless-stopped
     depends_on:
