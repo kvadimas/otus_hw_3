@@ -54,6 +54,7 @@ services:
       - ./blackbox/blackbox.yaml:/etc/blackbox/blackbox.yaml:ro
     networks:
       - wp_network
+#    ports: ["9115:9115"]
 
   prometheus:
     image: prom/prometheus:latest

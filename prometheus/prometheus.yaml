@@ -4,11 +4,13 @@ global:
 scrape_configs:
   - job_name: 'blackbox'
     metrics_path: /probe
+    scrape_timeout: 4s
     params:
       module: [http_2xx]
     static_configs:
       - targets:
-          - nginx:80
+          - http://nginx:80
+          - http://localhost:80
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
